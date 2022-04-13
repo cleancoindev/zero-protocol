@@ -1,9 +1,9 @@
-import BigNumber from 'bignumber.js';
-import { TransferRequest } from '../../types';
+import { BigNumber } from '@ethersproject/bignumber';
+import { TransferRequest } from '../../TransferRequest';
 
 const wait = async (ms: number): Promise<void> => await new Promise((r) => setTimeout(r, ms));
-const transferRequest: TransferRequest = {
-	amount: new BigNumber(10),
+const transferRequest: TransferRequest = new TransferRequest({
+	amount: BigNumber.from('10').toString(),
 	asset: 'BTC',
 	data: 'test',
 	module: 'any',
@@ -11,6 +11,6 @@ const transferRequest: TransferRequest = {
 	pNonce: 2,
 	to: 'test',
 	underwriter: 'foo',
-};
+});
 
 export { wait, transferRequest };
