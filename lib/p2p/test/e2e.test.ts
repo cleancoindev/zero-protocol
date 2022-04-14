@@ -53,5 +53,12 @@ describe('E2E', () => {
 		const user = createZeroUser(connection);
 		//@ts-ignore
 		const keeper = createZeroKeeper(connection);
+		await keeper.setTxDispatcher((request) => {
+			console.log(request);
+		});
+		user.publishTransferRequest({
+			amount: 123,
+			signature: 1094510293409342,
+		});
 	});
 });

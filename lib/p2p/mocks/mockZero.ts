@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { utils } from 'ethers';
-import { Duplex } from 'stream';
+import { Duplex, Readable, Writable } from 'stream';
 
 export class MockZeroPubSub extends EventEmitter {
 	publish(channel: string, data: any) {
@@ -16,6 +16,8 @@ export class MockZeroPubSub extends EventEmitter {
 }
 
 export class MockZeroStream extends Duplex {
+	sink: this = this;
+	source: this = this;
 	constructor(remotePeer) {
 		super();
 	}
