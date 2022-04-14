@@ -25,23 +25,25 @@ const channel = new MockZeroPubSub();
 
 export class MockZeroConnection extends EventEmitter {
 	peerId: string;
-	pubsub: MockZeroPubSub;
+	pubsub: any;
+	channel: MockZeroPubSub;
 	subscribed: string[];
 	constructor(channel: MockZeroPubSub) {
 		super();
 		this.peerId = utils.randomBytes(8).toString();
-		this.pubsub = channel;
+		this.channel = channel;
+		this.pubsub = {};
 		this.pubsub.subscribe = (_channel: string) => {
 			this.subscribed.push(_channel);
-			this.pubsub.on(_channel, this.emit);
+			this.channel.on(_channel, this.emit);
 		};
 		this.pubsub.unsubscribe = (_channel: string) => {
 			this.subscribed = this.subscribed.filter((d) => d !== _channel);
-			this.pubsub.removeAllListeners(_channel);
+			this.channel.removeAllListeners(_channel);
 		};
 	}
 	start() {
-		this.pubsub.on(
+		this.channel.on(
 			this.peerId,
 			({
 				stream,
@@ -58,7 +60,7 @@ export class MockZeroConnection extends EventEmitter {
 	}
 	dialProtocol(to: string, target: string) {
 		const stream = new MockZeroStream(to);
-		this.pubsub.emit(to, { stream, target, connection: { remotePeer: this.peerId } });
+		this.channel.emit(to, { stream, target, connection: { remotePeer: this.peerId } });
 		return {
 			stream,
 			connection: {
@@ -77,6 +79,6 @@ export class MockZeroConnection extends EventEmitter {
 	}
 }
 
-export async function createMockZeroConnection() {
+export function createMockZeroConnection() {
 	return new MockZeroConnection(channel);
 }
