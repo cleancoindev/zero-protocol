@@ -15,8 +15,8 @@ describe('E2E', () => {
 	afterEach(() => {
 		sinon.restore();
 	});
-	before(() => {
-		connection = createMockZeroConnection();
+	before(async () => {
+		connection = await createMockZeroConnection();
 	});
 
 	// it('should subscribe to keeper broadcasts', async () => {
@@ -57,20 +57,20 @@ describe('E2E', () => {
 		user.conn.start();
 		keeper.conn.start();
 		user.subscribeKeepers();
+		const wait = new Promise((resolve) => {
+			connection.pubsub.on('zero.keepers', (id) => {
+				resolve(id);
+			});
+		});
+		await keeper.advertiseAsKeeper(connection.peerId.toB58String());
 		keeper.setTxDispatcher((request) => {
 			console.log(request);
 		});
-		const advertise = new Promise((resolve) => {
-			connection.on('zero.keepers', (data) => {
-				console.log(data);
-				resolve(data);
-			});
+		await wait;
+		console.log('publishing');
+		await user.publishTransferRequest({
+			amount: 123,
+			signature: 1094510293409342,
 		});
-		keeper.advertiseAsKeeper(utils.hexlify(utils.randomBytes(16)).toString());
-		console.log(await advertise);
-		// await user.publishTransferRequest({
-		// 	amount: 123,
-		// 	signature: 1094510293409342,
-		// });
 	});
 });

@@ -118,6 +118,7 @@ export class ZeroUser extends EventEmitter {
 				if (ackReceived !== true) {
 					try {
 						const peer = await peerId.createFromB58String(keeper);
+						console.log(peer);
 						const { stream } = await this.conn.dialProtocol(peer, '/zero/keeper/dispatch');
 						pipe(JSON.stringify(requestFromTemplate), lp.encode(), stream.sink);
 						this.log.info(`Published transfer request to ${keeper}. Waiting for keeper confirmation.`);
