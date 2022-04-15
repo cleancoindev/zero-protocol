@@ -69,10 +69,9 @@ export class MockZeroConnection extends EventEmitter {
 			},
 		);
 	}
-	dialProtocol(to: string, target: string) {
-		console.log(to, target);
+	dialProtocol(to: PeerId, target: string) {
 		const stream = new MockZeroStream(to);
-		this.channel.emit(to, { stream, target, connection: { remotePeer: this.peerId.toB58String() } });
+		this.channel.emit(to.toB58String(), { stream, target, connection: { remotePeer: this.peerId.toB58String() } });
 		return {
 			stream,
 			connection: {
@@ -82,6 +81,7 @@ export class MockZeroConnection extends EventEmitter {
 	}
 	handle(channel: string, handler: Function) {
 		this.on(channel, ({ stream, connection }: { stream: MockZeroStream; connection: { remotePeer: string } }) => {
+			console.log('handling', channel);
 			handler({ stream, connection });
 		});
 	}

@@ -61,10 +61,13 @@ export class ZeroKeeper {
 					return;
 				}*/
 				let string = [];
+				console.log('clog 1');
 				for await (const msg of rawData) {
+					console.log(msg.toString());
 					string.push(msg.toString());
 				}
 				const transferRequest = JSON.parse(string.join(''));
+				console.log('clog 2');
 				await (
 					this.storage || {
 						async set() {
@@ -72,6 +75,7 @@ export class ZeroKeeper {
 						},
 					}
 				).set(transferRequest);
+				console.log('clog 3');
 				callback(transferRequest, this.makeReplyDispatcher(duplex.connection.remotePeer));
 			});
 		};

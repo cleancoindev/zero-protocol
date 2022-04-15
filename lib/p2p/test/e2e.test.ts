@@ -62,9 +62,14 @@ describe('E2E', () => {
 				resolve(id);
 			});
 		});
+
 		await keeper.advertiseAsKeeper(connection.peerId.toB58String());
-		keeper.setTxDispatcher((request) => {
-			console.log(request);
+		const prom = new Promise((resolve) => {
+			keeper.setTxDispatcher((request, dialBack) => {
+				console.log('logging transfer request', request);
+				console.log(request, dialBack);
+				resolve(request);
+			});
 		});
 		await wait;
 		console.log('publishing');
@@ -72,5 +77,6 @@ describe('E2E', () => {
 			amount: 123,
 			signature: 1094510293409342,
 		});
+		await prom;
 	});
 });
