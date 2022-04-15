@@ -1,7 +1,9 @@
 import { EventEmitter } from 'events';
 import { utils } from 'ethers';
 import { Duplex, Readable, Writable } from 'stream';
+import toIterable from 'stream-to-it';
 import PeerId from 'peer-id';
+import { any } from 'bluebird';
 
 export class MockZeroPubSub extends EventEmitter {
 	publish(channel: string, data: any) {
@@ -17,10 +19,12 @@ export class MockZeroPubSub extends EventEmitter {
 }
 
 export class MockZeroStream extends Duplex {
-	sink: this = this;
-	source: this = this;
+	sink: any;
+	source: any;
 	constructor(remotePeer) {
 		super();
+		this.sink = toIterable.sink(this);
+		this.source = toIterable.source(this);
 	}
 }
 
