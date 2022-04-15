@@ -26,15 +26,17 @@ export class MockZeroStream extends Duplex {
 const channel = new MockZeroPubSub();
 
 export class MockZeroConnection extends EventEmitter {
-	peerId: string;
+	peerId: any;
 	pubsub: any;
 	channel: MockZeroPubSub;
 	subscribed: string[];
 	constructor(channel: MockZeroPubSub) {
 		super();
-		this.peerId = utils.randomBytes(8).toString();
-		this.channel = channel;
-		this.pubsub = {};
+		this.peerId = {};
+		this.peerId.value = utils.hexlify(utils.randomBytes(8)).toString();
+		this.peerId.toB58String = () => this.peerId.value;
+		this.subscribed = [];
+		this.pubsub = this.channel;
 		this.pubsub.subscribe = (_channel: string) => {
 			this.subscribed.push(_channel);
 			this.channel.on(_channel, this.emit);
@@ -43,10 +45,14 @@ export class MockZeroConnection extends EventEmitter {
 			this.subscribed = this.subscribed.filter((d) => d !== _channel);
 			this.channel.removeAllListeners(_channel);
 		};
+		this.pubsub.publish = async (_channel: string, data: any) => {
+			this.channel.emit(_channel, { data, from: this.peerId.value });
+			return;
+		};
 	}
 	start() {
 		this.channel.on(
-			this.peerId,
+			this.peerId.value,
 			({
 				stream,
 				target,
@@ -66,7 +72,7 @@ export class MockZeroConnection extends EventEmitter {
 		return {
 			stream,
 			connection: {
-				remotePeer: this.peerId,
+				remotePeer: this.peerId.value,
 			},
 		};
 	}
@@ -82,5 +88,6 @@ export class MockZeroConnection extends EventEmitter {
 }
 
 export function createMockZeroConnection() {
+	MockZeroConnection.prototype.channel = channel;
 	return new MockZeroConnection(channel);
 }

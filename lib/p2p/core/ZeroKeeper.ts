@@ -83,3 +83,22 @@ export class ZeroKeeper {
 		clearTimeout(this.active);
 	}
 }
+
+export class MockZeroKeeper extends ZeroKeeper {
+	async advertiseAsKeeper(address: string) {
+		await super.advertiseAsKeeper(address);
+		try {
+			await this.conn.pubsub.publish(
+				'zero.keepers',
+				fromJSONtoBuffer({
+					address,
+				}),
+			);
+			this.log.debug(`Made presence known ${this.conn.peerId.toB58String()}`);
+		} catch (e: any) {
+			console.debug(e);
+			this.log.info('Could not make presence known. Retrying in 1s');
+			this.log.debug(e.message);
+		}
+	}
+}

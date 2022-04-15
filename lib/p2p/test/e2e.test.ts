@@ -1,8 +1,9 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import { createMockZeroConnection, MockZeroConnection } from '../mocks/mockZero';
-import { TransferRequest, createZeroUser, createZeroKeeper } from '../../zero';
-import { ZeroUser, ZeroKeeper } from '../core';
+import { TransferRequest, createZeroUser } from '../../zero';
+import { ZeroUser, MockZeroKeeper } from '../core';
+import { utils } from 'ethers';
 import { transferRequest, wait } from './testUtils';
 import 'mocha';
 import { ZeroConnection } from '../core';
@@ -14,7 +15,7 @@ describe('E2E', () => {
 	afterEach(() => {
 		sinon.restore();
 	});
-	beforeEach(() => {
+	before(() => {
 		connection = createMockZeroConnection();
 	});
 
@@ -52,13 +53,24 @@ describe('E2E', () => {
 		//@ts-ignore
 		const user = createZeroUser(connection);
 		//@ts-ignore
-		const keeper = createZeroKeeper(connection);
-		await keeper.setTxDispatcher((request) => {
+		const keeper = new MockZeroKeeper(connection);
+		user.conn.start();
+		keeper.conn.start();
+		user.subscribeKeepers();
+		keeper.setTxDispatcher((request) => {
 			console.log(request);
 		});
-		user.publishTransferRequest({
-			amount: 123,
-			signature: 1094510293409342,
+		const advertise = new Promise((resolve) => {
+			connection.on('zero.keepers', (data) => {
+				console.log(data);
+				resolve(data);
+			});
 		});
+		keeper.advertiseAsKeeper(utils.hexlify(utils.randomBytes(16)).toString());
+		console.log(await advertise);
+		// await user.publishTransferRequest({
+		// 	amount: 123,
+		// 	signature: 1094510293409342,
+		// });
 	});
 });
