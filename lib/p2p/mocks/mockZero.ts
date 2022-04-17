@@ -18,14 +18,32 @@ export class MockZeroPubSub extends EventEmitter {
 	}
 }
 
-export class MockZeroStream extends Duplex {
-	sink: any;
+export class MockZeroStream {
+	store: any[];
 	source: any;
-	constructor(remotePeer) {
-		super();
-		this.sink = toIterable.sink(this);
-		this.source = toIterable.source(this);
+	sink: any;
+	common: EventEmitter;
+	constructor(common: EventEmitter) {
+		this.store = [];
+		this.common = common;
+		this.source = {
+			[Symbol.asyncIterator]() {
+				return new Promise((resolve) => {
+					console.log('handling');
+					this.common.on('common.piped.data', (data: any) => {
+						console.log(data);
+						resolve(data);
+					});
+				});
+			},
+		};
+		this.sink = async (stream: any) => {
+			for await (const data of stream) {
+				this.common.emit('common.piped.data', data);
+			}
+		};
 	}
+	//gets piped here
 }
 
 const channel = new MockZeroPubSub();
@@ -70,7 +88,7 @@ export class MockZeroConnection extends EventEmitter {
 		);
 	}
 	dialProtocol(to: PeerId, target: string) {
-		const stream = new MockZeroStream(to);
+		const stream = new MockZeroStream(this.channel);
 		this.channel.emit(to.toB58String(), { stream, target, connection: { remotePeer: this.peerId.toB58String() } });
 		return {
 			stream,
@@ -81,7 +99,6 @@ export class MockZeroConnection extends EventEmitter {
 	}
 	handle(channel: string, handler: Function) {
 		this.on(channel, ({ stream, connection }: { stream: MockZeroStream; connection: { remotePeer: string } }) => {
-			console.log('handling', channel);
 			handler({ stream, connection });
 		});
 	}
