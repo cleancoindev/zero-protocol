@@ -27,41 +27,26 @@ export class MockZeroStream {
 	constructor(common: EventEmitter) {
 		this.common = common;
 		this.source = async function* () {
-			const data: { done: boolean; value?: any } = await new Promise((resolve) => {
-				console.log('iterating');
-				if (this.store.length > 0) {
-					let done = false;
-					const value = this.store[this.store.length - 1].pop();
-					if (this.store[this.store.length - 1].length == 0) {
-						this.store.pop();
-						done = true;
-					}
-					resolve({ value, done });
-				}
-				common.on('common.piped.end', () => resolve({ done: true }));
-				common.on('common.piped.data', (value: any) => {
-					console.log(value);
-					resolve({ done: false, value });
-				});
+			let done = false;
+			let resolve: (value: unknown) => void;
+			let promise = new Promise((r) => (resolve = r));
+			let data: any;
+			common.on('common.piped.data', (value: any) => {
+				data = value;
+				resolve(null);
+				promise = new Promise((r) => (resolve = r));
 			});
-			console.log(data);
-			yield data.value;
-		}.bind(this);
-
-		this.common.on('common.piped.data', (data: any) => {
-			if (this.store.length == 0) {
-				this.store.push([]);
+			common.on('common.piped.end', () => {});
+			while (!done) {
+				await promise;
+				console.log(data.toString());
+				yield data;
 			}
-			this.store[this.store.length - 1].push(data);
-		});
-		this.common.on('common.piped.end', () => {
-			this.store.push([]);
-		});
+		}.bind(this);
 		this.sink = async (stream: any) => {
 			for await (const data of stream) {
 				this.common.emit('common.piped.data', data);
 			}
-			console.log('emitting data');
 			this.common.emit('common.piped.end', 'end');
 		};
 	}

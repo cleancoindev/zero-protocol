@@ -55,15 +55,11 @@ export class ZeroKeeper {
 		const handler = async (duplex: any) => {
 			const stream: any = duplex.stream;
 			pipe(stream.source, lp.decode(), async (rawData: any) => {
-				// TODO: match handle and dialProtocol spec
-				/*if (process?.env.NODE_ENV === 'test') {
-					callback(fromBufferToJSON(stream.source));
-					return;
-				}*/
 				let string = [];
 				for await (const msg of rawData) {
 					console.log('logging here', msg);
 					string.push(msg.toString());
+					console.log(string.join(''));
 				}
 				const transferRequest = JSON.parse(string.join(''));
 				await (
