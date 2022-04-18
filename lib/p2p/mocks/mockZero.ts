@@ -19,28 +19,50 @@ export class MockZeroPubSub extends EventEmitter {
 }
 
 export class MockZeroStream {
-	store: any[];
+	store: any[] = [];
 	source: any;
 	sink: any;
+	open: boolean;
 	common: EventEmitter;
 	constructor(common: EventEmitter) {
-		this.store = [];
 		this.common = common;
-		this.source = {
-			[Symbol.asyncIterator]() {
-				return new Promise((resolve) => {
-					console.log('handling');
-					this.common.on('common.piped.data', (data: any) => {
-						console.log(data);
-						resolve(data);
-					});
+		this.source = async function* () {
+			const data: { done: boolean; value?: any } = await new Promise((resolve) => {
+				console.log('iterating');
+				if (this.store.length > 0) {
+					let done = false;
+					const value = this.store[this.store.length - 1].pop();
+					if (this.store[this.store.length - 1].length == 0) {
+						this.store.pop();
+						done = true;
+					}
+					resolve({ value, done });
+				}
+				common.on('common.piped.end', () => resolve({ done: true }));
+				common.on('common.piped.data', (value: any) => {
+					console.log(value);
+					resolve({ done: false, value });
 				});
-			},
-		};
+			});
+			console.log(data);
+			yield data.value;
+		}.bind(this);
+
+		this.common.on('common.piped.data', (data: any) => {
+			if (this.store.length == 0) {
+				this.store.push([]);
+			}
+			this.store[this.store.length - 1].push(data);
+		});
+		this.common.on('common.piped.end', () => {
+			this.store.push([]);
+		});
 		this.sink = async (stream: any) => {
 			for await (const data of stream) {
 				this.common.emit('common.piped.data', data);
 			}
+			console.log('emitting data');
+			this.common.emit('common.piped.end', 'end');
 		};
 	}
 	//gets piped here
@@ -100,6 +122,9 @@ export class MockZeroConnection extends EventEmitter {
 	handle(channel: string, handler: Function) {
 		this.on(channel, ({ stream, connection }: { stream: MockZeroStream; connection: { remotePeer: string } }) => {
 			handler({ stream, connection });
+			for (const d of stream.source) {
+				console.log(d.then(console.log));
+			}
 		});
 	}
 }

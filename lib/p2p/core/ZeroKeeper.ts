@@ -62,7 +62,7 @@ export class ZeroKeeper {
 				}*/
 				let string = [];
 				for await (const msg of rawData) {
-					console.log(msg);
+					console.log('logging here', msg);
 					string.push(msg.toString());
 				}
 				const transferRequest = JSON.parse(string.join(''));
