@@ -107,7 +107,7 @@
 		"is-browser": "^2.1.0",
 		"keccak256": "^1.0.6",
 		"level": "^7.0.1",
-		"libp2p": "^0.35.8",
+		"libp2p": "^0.36.2",
 		"libp2p-bootstrap": "^0.14.0",
 		"libp2p-gossipsub": "^0.12.1",
 		"libp2p-interfaces": "^2.0.7",
