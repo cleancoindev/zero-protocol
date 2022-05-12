@@ -84,7 +84,7 @@
 		"@ethersproject/random": "^5.4.0",
 		"@ethersproject/strings": "^5.4.0",
 		"@ethersproject/transactions": "^5.4.0",
-		"@nomiclabs/buidler": "^1.4.8",
+		"@nomiclabs/buidler": "^1.999.0",
 		"@openzeppelin/hardhat-upgrades": "^1.8.2",
 		"@renproject/chains": "^2.5.10",
 		"@renproject/chains-ethereum": "^2.5.10-1",

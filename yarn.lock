@@ -1798,10 +1798,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@nomiclabs/buidler@^1.4.8":
-  version "1.4.8"
-  resolved "https://registry.yarnpkg.com/@nomiclabs/buidler/-/buidler-1.4.8.tgz#36ebbd0fb54eb2052b1336bf90ee47825393e5dc"
-  integrity sha512-OUnNWx+WXOJzueJCfyuEXu3qNMq1j9eGDDpgflpRwjPeiQQnvVzfbwrPjs0PlxOC3Xtmaxabtgek5wGxS1C7Ew==
+"@nomiclabs/buidler@^1.999.0":
+  version "1.999.0"
+  resolved "https://registry.yarnpkg.com/@nomiclabs/buidler/-/buidler-1.999.0.tgz#d1dc6d676e0f5e22a001b75681ffabae9ae46714"
+  integrity sha512-ptoF1pKn0EvYL+7llZ1ZRAXUklsZZmcYTXiEpyTKYGlwXhD0UXwRZNzFGeDv2bp13qeaveG7BkMjWdWxU1KjXQ==
   dependencies:
     "@nomiclabs/ethereumjs-vm" "^4.1.1"
     "@sentry/node" "^5.18.1"
