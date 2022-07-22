@@ -4244,11 +4244,6 @@ bignumber.js@9.0.1:
   resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.0.1.tgz#8d7ba124c882bfd8e43260c67475518d0689e4e5"
   integrity sha512-IdZR9mh6ahOBv/hYGiXyVuyCetmGJhtYkqLBpTStdhEGjegpPlUawydyaF3pbIOFynJTpllEs+NP+CS9jKFLjA==
 
-bignumber.js@^4.0.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-4.1.0.tgz#db6f14067c140bd46624815a7916c92d9b6c24b1"
-  integrity sha512-eJzYkFYy9L4JzXsbymsFn3p54D+llV27oTQ+ziJG7WFRheJcNZilgVXMG0LoZtlQSKBsJdWtLFqOD0u+U0jZKA==
-
 bin-links@^2.2.1:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/bin-links/-/bin-links-2.3.0.tgz#1ff241c86d2c29b24ae52f49544db5d78a4eb967"
@@ -4323,14 +4318,14 @@ bitcoin-address-validation@^2.1.0:
     bech32 "^2.0.0"
     sha256-uint8array "^0.10.3"
 
-bitcoin-core@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/bitcoin-core/-/bitcoin-core-3.0.0.tgz#3ad59a16b6748d8b60937affae6c5f1df2db770d"
-  integrity sha512-fdh8V/5lxDXwbq6KUCd9PjbTDe1kPGFM1brSFByuzMb+VSArr1qF422qbAJvW0dLQSaRhVDb7WC+a602QM70FQ==
+bitcoin-core@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/bitcoin-core/-/bitcoin-core-3.1.0.tgz#cbdb96b7c138b5bfeca23e2a5c1539cbf436694c"
+  integrity sha512-X6QzzxcN3mb1eIs75EwZSHKlL3zk9MthDksnBdTwvJdTJKZpAG3PsL81fjtXcL3NkMWttr7o32pjEcngM9qUGA==
   dependencies:
     "@uphold/request-logger" "^2.0.0"
     debugnyan "^1.0.0"
-    json-bigint "^0.2.0"
+    json-bigint "^1.0.0"
     lodash "^4.0.0"
     request "^2.53.0"
     semver "^5.1.0"
@@ -10554,12 +10549,12 @@ jsesc@~0.5.0:
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
   integrity sha1-597mbjXW/Bb3EP6R1c9p9w8IkR0=
 
-json-bigint@^0.2.0:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/json-bigint/-/json-bigint-0.2.3.tgz#118d7f6ff1d38659f19f94cf73e64a75a3f988a8"
-  integrity sha1-EY1/b/HThlnxn5TPc+ZKdaP5iKg=
+json-bigint@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/json-bigint/-/json-bigint-1.0.0.tgz#ae547823ac0cad8398667f8cd9ef4730f5b01ff1"
+  integrity sha512-SiPv/8VpZuWbvLSMtTDU8hEfrZWg/mH/nV/b4o0CYbSxu1UIQPLdwKOCIyLQX+VIPO5vrLX3i8qtqFyhdPSUSQ==
   dependencies:
-    bignumber.js "^4.0.0"
+    bignumber.js "^9.0.0"
 
 json-buffer@3.0.0:
   version "3.0.0"
