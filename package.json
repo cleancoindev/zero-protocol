@@ -78,7 +78,7 @@
 		"zero-varenx": "https://github.com/zerodao-finance/zero-varenx"
 	},
 	"dependencies": {
-		"@0x/utils": "^6.4.3",
+		"@0x/utils": "^7.0.0",
 		"@ethersproject/bytes": "^5.4.0",
 		"@ethersproject/hash": "^5.4.0",
 		"@ethersproject/random": "^5.4.0",
